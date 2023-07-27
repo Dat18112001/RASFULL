@@ -1,0 +1,979 @@
+﻿@model HakunaMatata.Models.ViewModels.VM_RealEstateDetails;
+
+@section scripts{
+    @*    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=initMap">
+    </script>*@
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdaulA09E6i19z88_muzOLSmVVi0Vp4EM&libraries=places&language=vi&callback=initMap" async defer></script>
+}
+
+@{
+    ViewData["Title"] = "Thông tin chi tiết";
+
+    var realEstateType = Model.RealEstateTypeId switch
+    {
+        1 => "PHÒNG TRỌ",
+        2 => "NHÀ NGUYÊN CĂN",
+        3 => "CĂN HỘ",
+        4 => "Ở GHÉP",
+        _ => "PHÒNG TRỌ"
+    };
+
+    var statusCss = Model.Status.Equals("Còn phòng") ? "text-success" : "text-disable";
+    var statusIcon = Model.Status.Equals("Còn phòng") ? "fa fa-check" : "fa fa-times";
+}
+
+<!-- breadcrumb area start -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<div class="breadcrumb-area hero-wrap jarallax" style="background-image: url(../assets/img/detail_background3.jpg);">
+    <div class="overlay"></div>
+    <div class="container" style="background-image:url(/assets/img/detail_backgrond2.jpg)">
+        <div style="color:white" class="row info-room">
+            <div class="col-4" style="padding: 20px 20px 10px 20px;">
+
+                <div id="hero-carousel" class="carousel slide">
+                    <div class="carousel-inner ">
+                        <div class="carousel-item active c-item">
+                            @foreach (var imageUrl in Model.ImageUrls)
+                            {
+                                <img src="@imageUrl" class="w-100 c-img" alt="hinh2">
+                            }
+
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-8 info-item">
+                <div style="color: #ffffff" class="info-item-title">Phòng Trọ Cho Thuê Tháng <i class="fa fa-home" aria-hidden="true"></i></div>
+                <span class="address-item">@Model.Address</span>
+<div class="mt-3 info-noty @(Model.IsAvailable ? "info-noty-available" : "info-noty-not-available")">
+    @if (Model.IsAvailable)
+    {
+        <span class="text-success">
+            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            Còn phòng
+        </span>
+    }
+    else
+    {
+                        <span class="text-danger">
+            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            Hết phòng
+        </span>
+    }
+</div>
+
+                <div class="row">
+                    <div class="col-7">
+                        <span class="info-main-box">Phòng tiêu chuẩn 3 người</span>
+                        <ul class="info-main-list" style="list-style: none; padding-left:0; border-left: 1px solid #ffeee2">
+                            <li>
+                                <i class="fa fa-bed info-item-icon"></i> 3 phòng ngủ
+                            </li>
+                            <li>
+                                <i class="fa fa-bath info-item-icon"></i> 2 phòng tắm
+                            </li>
+                            <li>
+                                <i class="fa fa-motorcycle info-item-icon"></i> 1 chổ để xe
+                            </li>
+                        </ul>
+                        <span class="info-main-final-box">Chỉ còn 1 căn với giá này trên trang chúng tôi</span>
+                    </div>
+                    <div class="col-5">
+                        <h4 class="current-item">@Helper.VNCurrencyFormat(Model.Price.ToString())/tháng</h4>
+                        <span class="info-noty-new">(giá ở trên chưa bao gồm phí điện/nước)</span>
+                        <div class="nav-right-part nav-right-part-desktop">
+                            <form action="add-to-wishlist" method="post">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <input type="hidden" name="userID" id="userIDInput" value="" />
+                                <div class="col-xl-4 col-lg-6 col-md-6 btn-container">
+                                    <input style="color:white;padding-top:0px; background-color:#c21616" class="btn btn-brown" type="submit" value="Add to wishlist" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- breadcrumb area End -->
+<!-- property-details-area start -->
+
+<div class="property-details-area">
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-lg-8 frame-property">
+
+                <div class="property-info bdb">
+                    <div class="property-info-title">
+                        <div class="house-item-estate">
+                            @realEstateType
+                        </div>
+                        <div class="house-item-status"> Tình trạng : <i class="@statusIcon"></i> @Model.Status </div>
+                    </div>
+                    <div class="house-item-title mt-3">
+                        @Model.Title
+                    </div>
+                    <div class="house-item-price mt-2">
+                        <i class="fa fa-usd"></i>
+                        @Helper.VNCurrencyFormat(Model.Price.ToString())/tháng
+                    </div>
+                </div>
+                <div class="house-item-info">
+                    <div class="row house-item-abs bdb">
+
+                        <div class="col-auto">
+
+                            <div class="house-item-text">
+                                Số phòng :
+                                <span class="house-item-room-number">
+                                    <i class="fa fa-home"></i> @Model.RoomNumber phòng
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-auto">
+                            <i class="fa fa-circle house-space-icon"></i>
+                        </div>
+
+                        <div class="col-auto">
+
+                            <div class="house-item-text">
+
+                                Diện tích :
+                                <span class="house-item-acreage">
+                                    @Model.Acreage m<sub style="vertical-align:super">2</sub>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="house-item-abs bdb">
+                        <div class="house-date-start mb-2">
+
+                            Ngày bắt đầu:
+                            <span>
+                                <i class="fa fa-calendar house-date-icon"></i>@Model.BeginTime
+                            </span>
+
+                        </div>
+                        <div class="house-date-end">
+
+                            Ngày hết hạn:
+                            <span>
+                                <i class="fa fa-calendar-times-o house-date-icon"></i>@Model.ExprireTime
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 bdb">
+                        <div class="col-md-12">
+                            <div class="house-item-address">Địa chỉ</div>
+                            <p class="house-item-address-text">
+                                @Model.Address
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 bdb">
+                        <div class="col-md-12">
+                            <div class="house-item-desc">Mô tả chi tiết</div>
+                            <p class="house-item-desc-text">
+                                @Html.Raw(Model.Description)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="house-item-abs">
+                        <div class="house-item-utility">Tiện ích có sẵn</div>
+                        <div class="row">
+                            @if (Model.SecurityCamera)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Camera an ninh</li>
+                                    </ul>
+                                </div>
+                            }
+                            @if (Model.HasPrivateWc)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Vệ sinh riêng</li>
+
+                                    </ul>
+                                </div>
+                            }
+
+                            @if (Model.HasMezzanine)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Có gác lửng</li>
+
+                                    </ul>
+                                </div>
+                            }
+
+                            @if (Model.AllowCook)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Cho phép nấu ăn</li>
+
+                                    </ul>
+                                </div>
+                            }
+
+                            @if (Model.FreeTime)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Giờ giấc tự do</li>
+
+                                    </ul>
+                                </div>
+                            }
+                            @if (Model.WifiPrice == 0)
+                            {
+                                <div class="col-sm-6">
+                                    <ul class="rld-list-style mb-3">
+                                        <li class="house-item-utility-text"><i class="fa fa-check"></i> Free wifi</li>
+                                    </ul>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget col-lg-4">
+                <div class="widget agent-user-first">
+                    <div class="agent-content">Đối tác uy tín của RasFinal <i class="fa fa-calendar-plus-o ml-2"></i></div>
+                    <div class="agent-avatar">
+                        <img class="img-avatar" src="../images/avatar/@Model.Avatar" />
+                    </div>
+                    <span class="agent-name-item-first">@Model.AgentName</span>
+                    <div class="btn-container">
+                        <a href="#" style="text-decoration: none">
+                            <div class="btn-contact-call">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                                @Model.ContactNumber
+                            </div>
+                        </a>
+                    </div>
+                    <div class="btn-container">
+                        <a href="#form-email-agent" style="text-decoration: none">
+                            <div class="btn-contact-email">
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                Email
+                            </div>
+                        </a>
+                    </div>
+                    <ul class="social-icon">
+                        <li>
+                            <a href="@Model.Facebook" target="_blank">
+                                <i class="fa fa-facebook  "></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Model.Zalo" target="_blank">
+                                <i class="fa fa-volume-control-phone  "></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo loại phòng</div>
+                    <ul class="ml-2">
+
+                        @foreach (var item in ViewBag.type)
+                        {
+                            var b = item.Id;
+                            <li><a style="text-decoration:none; color:black" asp-action="Index" asp-route-type="@b">@item.RealEstateTypeName</a> </li>
+                        }
+
+                    </ul>
+                </div>
+                <div class="widget mt-3 pl-3">
+                    <div class="text-danger h6 pt-3">Xem theo thành phố</div>
+                    <ul class="ml-2">
+                        @{
+                            int counter = 0; // Initialize a counter variable
+                        }
+
+                        @foreach (var item in ViewBag.city)
+                        {
+                            var b = item.Id;
+                            <li><a style="text-decoration: none; color:black" asp-action="Index" asp-route-city="@b">@item.CityName</a></li>
+                            counter++;
+                            if (counter >= 4) // Break the loop when the counter reaches 4
+                            {
+                                break;
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="house-item-abs bdt">
+            <div class="house-item-pic mb-4 mt-4">Hình ảnh căn hộ</div>
+            @if (Model.ImageUrls.Count > 0)
+            {
+                <div id="picturesCarousel" class="carousel slide bg-carousel mb-4" data-ride="carousel">
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#picturesCarousel" data-slide-to="0" class="active"></li>
+                        @for (var i = 1; i < Model.ImageUrls.Count; i++)
+                        {
+                            <li data-target="#picturesCarousel" data-slide-to="@i"></li>
+                        }
+                    </ol>
+
+                    <div class="carousel-inner" style="height: 500px;">
+                        <div class="carousel-item active" style="height: 100%;">
+                            <img class="d-block  mx-auto h-100" src="@Model.ImageUrls.First()" alt="">
+                        </div>
+                        @for (var i = 1; i < Model.ImageUrls.Count; i++)
+                        {
+                            <div class="carousel-item" style="height: 100%;">
+                                <img class="d-block mx-auto h-100" src="@Model.ImageUrls[i]" alt="">
+                            </div>
+                        }
+                    </div>
+
+                    <a class="carousel-control-prev" href="#picturesCarousel" role="button"
+                       data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#picturesCarousel" role="button"
+                       data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div>Hiện chưa có hình ảnh nào.</div>
+            }
+
+        </div>
+        <div class="house-item-abs bdt style-two mb-4">
+            <div class="house-item-map">Bản đồ</div>
+            <p style="color: black" class="font-italic">(Vị trí trên bản đồ chỉ mang tính chất tương đối, chưa phải vị trí chính xác)</p>
+            <button style="color:white;padding-top:0px; background-color:#c21616" class="btn btn-brown" onclick="getUserLocation()">Chỉ Đường</button>
+            <div id="distanceDisplay"></div>
+            <input type="hidden" id="lat" value="@Model.Latitude" />
+            <input type="hidden" id="longt" value="@Model.Longtitude" />
+
+
+            <div id="map" style="height: 500px; border-radius:8px"></div>
+        </div>
+        <div class="container">
+            <div class="row connect-agent-box">
+                <div class="col-lg-4 agent-item-left">
+                    <div class="house-item-agent">Liên hệ người đăng bài viết</div>
+                    <p class="house-item-agent-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                    <a class="house-agent-desc" href="#">
+                        Xem chi tiết người đăng <i class="fa fa-angle-double-right"></i>
+                    </a>
+                    <div class="agent-box mt-2">
+                        <div class="d-flex agent-user">
+                            <div class="product_agent_size">
+                                <img src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg" alt="placeholder+image" class="w-100 rounded-circle img-agent-avatar">
+                                <!-- <img class="img-avatar w-100 rounded-circle" src="../images/avatar/@Model.Avatar" alt="avatar-agent"/> -->
+                            </div>
+                            <div class="align-self-center agent-name-box">
+                                <h3 class="agent-name-item">Nguời đăng</h3>
+                                <span class="agent-name-item">@Model.AgentName</span>
+                            </div>
+                            <div class="btn-call-agent align-self-center">Call</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 contact-agent">
+                    <div class="email-contact" id="form-email-agent">
+                        <h3 class="agent-tilte">Please send me information on 51 Clancy McKenna Crescent, Bonner ACT007</h3>
+                        <div class="row menu-check">
+                            <div class="col-6">
+                                <input type="checkbox" id="check-1">
+                                <label for="check-1"> Inspection times</label><br>
+                                <input type="checkbox" id="check-2">
+                                <label for="check-2"> Availability</label><br>
+                            </div>
+                            <div class="col-6">
+                                <input type="checkbox" id="check-3">
+                                <label for="check-3"> Lease tern</label><br>
+                                <input type="checkbox" id="check-4">
+                                <label for="check-4"> Other</label><br>
+                            </div>
+                        </div>
+                        <div class="row input-text-main">
+                            <div class="col-6 input-with-icon">
+                                <input type="text" id="input-text-name" class="input-text" placeholder="&#xf2c0; Full Name">
+                                <br>
+                                <input type="text" id="input-text-phone" class="input-text" placeholder="&#xf095; Phone Numer">
+                                <br>
+                            </div>
+                            <div class="col-6">
+                                <input type="text" id="input-text-email" class="input-text" placeholder="&#xf003; Email">
+                                <br>
+                                <input type="text" id="input-text-post" class="input-text" placeholder="&#xf041; Postcode" />
+                                <br>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="check-send">
+                        <label for="check-send"> Send me a copy of the enquiry</label><br />
+                        <div class="btn btn-send-enquiry">
+                            SEND ENQUIRY
+                        </div>
+                        <p style="color:black" class="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- property details area end -->
+
+<style>
+    .bdb {
+        border-bottom: 1px solid #E3E9F2;
+    }
+
+    .bdt {
+        border-top: 1px solid #E3E9F2;
+    }
+
+    .info-room {
+        height: 380px;
+        border-radius: 28px;
+        background-color: rgba(99, 99, 98, 0.8);
+        border-color: #fff3cd;
+        box-shadow: 0 0 4px #fff3cd;
+    }
+
+    .c-item {
+        height: 340px;
+    }
+
+    .c-img {
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+        padding-bottom: 0;
+    }
+
+    .address-item {
+        font-size: 16px;
+        line-height: 20px;
+        color: #fff3cd;
+    }
+
+
+    .info-item {
+        z-index: 10;
+        padding: 30px 0;
+    }
+
+    .info-item-title {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 40px;
+        color: #c21616;
+    }
+
+        .info-item-title:hover {
+            color: #000;
+        }
+
+    .btn-buy,
+    .btn-buy:hover {
+        border: 1px solid #000;
+        background-color: rgb(245 121 121);
+    }
+
+    .page-title {
+        margin-top: 20px;
+        font-size: 32px;
+        line-height: 38px;
+        font-weight: 600;
+    }
+
+    .agent-user {
+    }
+
+    .agent-user-first {
+        border: 1px solid #CCD4E3;
+        padding: 16px 8px 20px;
+        text-align: center;
+        border-radius: 2px;
+    }
+
+    .agent-nick-name {
+        margin-bottom: 48px;
+    }
+
+    .agent-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 100px;
+        margin: 12px auto;
+    }
+
+    .img-avatar {
+        border-radius: 100px;
+        border: 1px solid #000;
+        align-items: center;
+    }
+
+
+    .btn-sign,
+    .btn-sign:hover {
+        background-color: #b99796;
+    }
+
+
+    .btn-sign {
+        border: 1px solid #000;
+        width: 100%;
+        line-height: 32px;
+    }
+
+    .btn-contact-email {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        background-color: #c21616;
+        padding: 8px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-contact-call {
+        color: #0b2047;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        border: 1px solid #000;
+        padding: 8px;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .btn-container {
+        padding: 0 16px;
+        margin-top: 12px;
+    }
+
+    .social-icon {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 18px;
+    }
+
+    .img-property-item {
+        margin: 16px 0;
+        padding-bottom: 32px;
+    }
+
+    .contact-agent {
+        background-color: #e8eaed;
+        padding: 24px;
+    }
+
+    .btn-send-enquiry,
+    .btn-send-enquiry:hover {
+        background-color: var(--main-color-one);
+        width: 100%;
+        line-height: 32px;
+        margin: 16px 0;
+        color: #fff;
+    }
+
+    .agent-tilte {
+        font-size: 24px;
+    }
+
+
+    .menu-check,
+    .input-text,
+    .check-send {
+        margin-bottom: 16px;
+    }
+
+    #input-text-name,
+    #input-text-phone,
+    #input-text-email,
+    #input-text-post {
+        width: 100%;
+        height: 34px;
+    }
+
+    .input-text {
+        font-family: 'FontAwesome';
+        padding-left: 12px;
+    }
+
+    .info-noty {
+        width: 170px;
+        border-radius: 10px;
+        padding: 4px;
+        background-color: #f1fef6;
+        border-color: transparent;
+        color: #008234;
+        margin-bottom: 12px;
+    }
+
+    .info-main-box,
+    .info-main-final-box {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18px;
+    }
+
+    .info-main-final-box {
+        color: red;
+    }
+
+    .info-main-list {
+        list-style: none;
+        padding-left: 0;
+        border-left: 1px solid #ffeee2;
+    }
+
+        .info-main-list li {
+            color: #fff;
+            margin: 4px 0;
+        }
+
+    .btnf1 {
+        background-color: blue;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+        .btnf1:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+    .info-noty-new {
+        display: block;
+        font-size: 14px;
+        line-height: 18px;
+        margin: 12px 0;
+    }
+
+    .property-info {
+        padding-bottom: 12px;
+    }
+
+    .property-info-title {
+        display: flex;
+    }
+
+    .house-item-estate {
+        color: #fff;
+        text-shadow: 1px 0.5px 1px #ccc;
+        background-color: #c216168f;
+        padding: 4px 8px;
+        font-size: 14px;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+    .house-item-status {
+        background-color: var(--bs-danger);
+        padding: 4px 8px;
+        font-size: 14px;
+        border-radius: 4px;
+        margin-right: 10px;
+        color: #fff;
+    }
+
+    .house-item-title {
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: bold;
+        color: #354a6c;
+    }
+
+    .house-item-price {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 30px;
+        color: #354a6c;
+    }
+
+    .house-item-text,
+    .house-date-start,
+    .house-date-end {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 28px;
+        color: #354a6c;
+    }
+
+    .house-space-icon {
+        font-size: 8px;
+        color: #A0AFCB;
+    }
+
+    .house-date-icon {
+        margin-left: 12px;
+        margin-right: 6px;
+    }
+
+    .house-item-abs {
+        padding: 12px 0;
+    }
+
+    .house-item-info {
+        overflow: hidden;
+    }
+
+    .house-item-address,
+    .house-item-desc,
+    .house-item-utility,
+    .house-item-pic,
+    .house-item-map,
+    .house-item-agent {
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 28px;
+        color: #0b2047;
+        margin-bottom: 8px;
+    }
+
+    .house-item-address-text,
+    .house-item-desc-text,
+    .house-item-utility-text,
+    .house-item-agent-text {
+        color: #354A6C;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .bg-carousel {
+        background-color: #F1F5FA;
+    }
+
+    .connect-agent-box {
+        border: 1px solid #CCD4E3;
+        border-top: 4px solid #f3b709;
+    }
+
+    .img-agent-avatar {
+        border: 1px solid #CCD4E3;
+        height: 60px;
+    }
+
+    .agent-item-left {
+        padding: 24px 18px;
+    }
+
+    .house-agent-desc {
+        text-decoration: none;
+        color: #0B2047;
+    }
+
+    .btn-call-agent {
+        color: #fff;
+        background-color: #c21616;
+        padding: 4px 24px;
+        border-radius: 4px;
+        margin-left: 16px;
+        cursor: pointer;
+    }
+
+    .agent-content {
+        text-align: center;
+        background-color: #F1F5FA;
+        border-radius: 2px;
+        padding-left: 11px;
+        padding-top: 3px;
+        padding-bottom: 6px;
+    }
+
+    .agent-name-item {
+        color: #354A6C;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: 500;
+        text-shadow: none;
+    }
+
+    .agent-name-item-first {
+        color: #354A6C;
+        font-size: 24px;
+        line-height: 28px;
+        font-weight: 400;
+    }
+
+</style>
+<!-- Recommended area start -->
+<div class="recommended-area pd-top-90 pd-bottom-70">
+    <div class="container">
+        <div class="section-title">
+            <h3 class="title">Bài đăng liên quan</h3>
+            <a class="btn-view-all" asp-action="Index">Xem tất cả</a>
+        </div>
+        @await Html.PartialAsync("_recommendList", Model.RecommmendList)
+    </div>
+</div>
+<!-- Recommended area end -->
+@*<script>
+    // Initialize and add the map
+    function initialize() {
+        // The location of real esate
+        var latitude = document.getElementById('lat').value;
+        var longtitude = document.getElementById('longt').value;
+        console.log("TEST")
+        var loca = { lat: Number(latitude), lng: Number(longtitude) };
+        // The map, centered at real estate
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 17, center: loca });
+        // The marker
+        var marker = new google.maps.Marker({ position: loca, map: map });
+    }
+</script>*@
+<script>
+    // Lấy giá trị userId từ thẻ span
+    var userId = document.getElementById("userIdSpan").innerText;
+
+    // Gán giá trị userId cho thuộc tính value của thẻ input
+    document.getElementById("userIDInput").value = userId;
+</script>
+<script>
+    let map;
+    let userMarker;
+    let destinationLatLng;
+
+    function initMap() {
+        var latitude = parseFloat(document.getElementById('lat').value);
+        var longitude = parseFloat(document.getElementById('longt').value);
+        var location = { lat: latitude, lng: longitude };
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 17,
+            center: location
+        });
+
+        userMarker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLatLng = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                    calculateAndDisplayRoute(userLatLng, destinationLatLng);
+                    showDirections()
+                },
+                (error) => {
+                    console.error("Error getting user location:", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showUserLocation(userLatLng) {
+        if (userMarker) {
+            userMarker.setMap(null);
+        }
+        userMarker = new google.maps.Marker({
+            position: userLatLng,
+            map: map,
+            title: "Your Location",
+        });
+        map.setCenter(userLatLng);
+    }
+
+    function showDirections() {
+        const latInput = document.getElementById("lat").value;
+        const lngInput = document.getElementById("longt").value;
+        if (!latInput || !lngInput) {
+            alert("Please enter both latitude and longitude.");
+            return;
+        }
+
+        destinationLatLng = {
+            lat: parseFloat(latInput),
+            lng: parseFloat(lngInput),
+        };
+
+        if (isNaN(destinationLatLng.lat) || isNaN(destinationLatLng.lng)) {
+            alert("Invalid latitude or longitude values.");
+            return;
+        }
+
+        calculateAndDisplayRoute(userMarker.getPosition(), destinationLatLng);
+    }
+
+    function calculateAndDisplayRoute(userLatLng, destinationLatLng) {
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+
+        directionsService.route(
+            {
+                origin: userLatLng,
+                destination: destinationLatLng,
+                travelMode: google.maps.TravelMode.DRIVING,
+            },
+            (response, status) => {
+                if (status === "OK") {
+                    directionsRenderer.setDirections(response);
+
+                    // Extract and display the distance
+                    const distance = response.routes[0].legs[0].distance.text;
+                    document.getElementById("distanceDisplay").innerText = "Khoảng Cách: " + distance;
+                } else {
+                    console.error("Directions request failed due to " + status);
+                }
+            }
+        );
+    }
+</script>

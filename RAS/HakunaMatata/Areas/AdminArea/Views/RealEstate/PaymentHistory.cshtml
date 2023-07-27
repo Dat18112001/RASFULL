@@ -1,0 +1,9 @@
+﻿@model IEnumerable<HakunaMatata.Models.ViewModels.PaymentHistoryDetailModel>;
+
+@{ ViewData["Title"] = "Index";}
+
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAllHistoryPayment", Model)
+</div>
+
+

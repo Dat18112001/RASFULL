@@ -1,0 +1,142 @@
+﻿@{
+    Layout = null;
+}
+@model HakunaMatata.Models.ViewModels.VM_Register
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Đăng kí tài khoản</title>
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/admin/css/animate.css" rel="stylesheet">
+    <link href="~/admin/css/loginstyle.css" rel="stylesheet">
+    <link href="~/admin/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .text-danger {
+        color: red;
+    }
+
+    .form-group > button[type="submit"] {
+        display: block;
+    }
+
+</style>
+<body class="gray-bg">
+    <div class="login">
+        <div class="container">
+            <h1>Member Registration </h1>
+            <p class="text-warning">@ViewBag.Message</p>
+
+            <div class="login-form">
+                <form asp-action="Register" method="post" asp-route-returnurl="@Model.ReturnUrl">
+
+                    <div class="form-group">
+                        <input asp-for="LoginName" class="form-control" placeholder="Tài khoản đăng nhập" required>
+                        <span asp-validation-for="LoginName" class="text-danger"></span>
+                        <div class="text-left pl-1" id="check-existed"></div>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="AgentName" type="text" class="form-control" placeholder="Họ và tên" required>
+                        <span asp-validation-for="AgentName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Số điện thoại" required>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Email" name="Email" id="emailInput" class="form-control" placeholder="Email" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="text-left pl-1" id="check-existed"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group-append">
+                            <a style="font-size: 1.3rem;  text-decoration: underline;" id="sendOTPButton" asp-area="AdminArea" asp-controller="Account" asp-action="SendOTP" type="button" class="">Gửi mã OTP</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" required>
+                        <span asp-validation-for="ConfirmPassword" class=" text-danger"></span>
+                    </div>
+                    @if (ViewBag.isActiveOtp == false)
+                    {
+                        <div class="form-group">
+                            <p class="text-danger" style="color: red">Vui lòng xác thực OTP</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <button style="align-content:center; margin-left:100px" type="submit">Đăng kí</button>
+                        </div>
+                    }
+
+                    <a asp-area ="AdminArea" asp-controller="Account" asp-action="Login" style="font-size:large" class="text-muted text-center"><small>Đã có tài khoản?</small></a>
+
+                    @*<a href="#"><small>Quên mật khẩu?</small></a>*@
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Mainly scripts -->
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
+    <script src="~/admin/js/popper.min.js"></script>
+    <script src="~/admin/js/bootstrap.js"></script>
+    <script src="~/admin/js/services/hakunamata.js"></script>
+</body>
+<script>
+    document.getElementById("sendOTPButton").addEventListener("click", function () {
+        var email = document.getElementById("emailInput").value;
+        this.setAttribute("href", "send-otp?email=" + email);
+    });
+</script>
+<script>
+    document.getElementById("sendOTPButton").addEventListener("click", function () {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", this.href);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Gửi yêu cầu thành công, không chuyển hướng route
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    // Thực hiện các thay đổi trên giao diện (nếu cần)
+                } else {
+                    // Xử lý lỗi (nếu có)
+                }
+            } else {
+                // Xử lý lỗi khi gửi yêu cầu
+            }
+        };
+        xhr.send();
+    });
+</script>
+
+</html>
+
+<div class="parent clearfix">
+    <div class="bg-illustration">
+        <img src="~/assets/img/RAS-3.png" alt="logo">
+
+        <div class="burger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+
+
+</div>

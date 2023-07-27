@@ -1,0 +1,95 @@
+﻿@model IEnumerable<HakunaMatata.Models.ViewModels.PaymentHistoryDetailModel>;
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Lịch sử giao dịch</h5>
+                </div>
+
+                <form action="/AdminArea/RealEstate/PaymentHistory" method="GET">
+                    <div class="form-group">
+                        <label for="startDate">Start Date:</label>
+                        <div class="input-group date" id="startDatePicker" data-target-input="nearest">
+                            <input type="date" class="form-control" id="startDate" name="startDate"/>
+                            <div class="input-group-append" data-target="#startDatePicker" data-toggle="datetimepicker">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">End Date:</label>
+                        <div class="input-group date" id="endDatePicker" data-target-input="nearest">
+                            <input type="date" class="form-control" id="endDate" name="endDate"/>
+                            <div class="input-group-append" data-target="#endDatePicker" data-toggle="datetimepicker">
+                                <div class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
+                <div class="ibox-content">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                Id
+                            </th>
+                            <th class="text-center">
+                                AgentID
+                            </th>
+                            <th class="text-center">
+                                Email Agent
+                            </th>
+                            <th class="text-center">
+                                Payment Date
+                            </th>
+                            <th class="text-center">
+                                Số Coin nạp
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    @item.PaymentID
+                                </td>
+                                <td class="text-center">
+                                    @item.AgentID
+                                </td>
+                                <td class="text-center">
+                                    @item.EmailAgent
+                                </td>
+                                <td class="text-center">
+                                    @item.PaymentDate
+                                </td>
+                                <td class="text-center cls-money">
+                                    @item.Coin
+                                </td>
+
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="3"></td>
+                            <td class="text-center">
+                                <strong>Tổng số coin :</strong><span class="cls-money"> @Model.Sum(item => item.Coin)</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@model HakunaMatata.Models.ViewModels.VM_News
+
+@section scripts{
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=LoadMarker">
+    </script>
+    <script type="text/javascript" src="~/assets/js/maplace-active.js"></script>
+}
+<div class="bg-navbar-news"></div>
+<div class="bg-sesion-link">
+    <div class="sesion-link container">
+        <a href="/" class="sesion-link-item">
+            <span>Home</span>
+            <i class="fa fa-angle-right"></i>
+        </a>
+        <a href="/" class="sesion-link-item">
+            <span>News</span>
+            <i class="fa fa-angle-right"></i>
+        </a>
+        <a href="/" class="sesion-link-item">
+            <span>ACT</span>
+            <i class="fa fa-angle-right"></i>
+        </a>
+        <span class="sesion-link-item">News main</span>
+    </div>
+</div>
+<!-- body news start -->
+<div class="container">
+    <div class="container-body-news row">
+        <div class="col-7">
+            <div class="news-details-title">Explore Campbell: The suburb that continues to evolve</div>
+            <div class="authur-times">
+                <span class="text-color mr-2">By</span>
+                <div class="authur-text">Jessica Taulaga</div>
+                <div class="times-text">June 17, 2023</div>
+            </div>
+            <div class="pb-4 mb-2 bdb">
+                <img class="img-news-content" src="../images/@Model.UrlImage" />
+            </div>
+            <p class="text-color mt-3">@Model.NewsBody</p>
+
+            <div class="news-details-box mt-5">
+                <div class="recommend-text">Eat & drink</div>
+                <div class="text-color">Campbell is a foodie’s paradise. Start your day with coffee and a moreish brunch at<span class="red-text"> Teddy Picker’s</span>, or pop by for a cosy jaffle and coffee at Intra.</div>
+                <div class="text-color mt-2 mb-3">
+                    Then there’s pub fare at<span class="red-text"> The Pedlar</span>, wood-fired goodness at<span class="red-text"> Department of Pizza</span>, or authentic Japanese flavours at<span class="red-text"> Maji</span>. Newbie <span class="red-text">Peonee</span>
+                    serves  a set menu designed around what’s best on the day. Or settle in for sleek South-East Asian cuisine at<span class="red-text"> Lanterne Rooms</span> or refined French dining at<span class="red-text"> Les Bistronomes</span>. And that’s just scratching the surface.
+                </div>
+                <div class="pb-4 mb-2 bdb">
+                    <img class="img-news-content" src="../images/@Model.UrlImage" />
+                </div>
+            </div>
+
+            <div class="news-details-box mt-5">
+                <div class="recommend-text">See & do</div>
+                <div class="text-color">Campbell is home to one of the capital’s most popular attractions: the<span class="red-text"> Australian War Memorial</span>. A wander through the magnificent building and its exhibitions is always a moving experience.</div>
+                <div class="table-see-do mt-2">
+                    <div class="table-see-do-title text-color bdb">
+                        RELATED ARTICLES
+                    </div>
+                    <div class="table-see-do-item bdb">
+                        <img class="img-table-item" src="https://res.akamaized.net/domain/image/upload/t_web/c_fill,w_400,h_400/v1666565283/13_Throsby_Crescent_20_qsbavm.jpg" alt="hinh nen" />
+                        <span class="table-see-do-text text-color">Explore Narrabundah: The Inner South suburb popular with families</span>
+                    </div>
+                    <div class="table-see-do-item">
+                        <img class="img-table-item" src="https://res.akamaized.net/domain/image/upload/t_web/c_fill,w_400,h_400/v1688701427/6_grant_2_w1syma.jpg" />
+                        <span class="table-see-do-text text-color">Could this be Canberra's prettiest street?</span>
+                    </div>
+
+                </div>
+                <div class="text-color mt-2 mb-2">
+                    From here, you can head up<span class="red-text"> Mount Ainslie</span> via one of Canberra’s most iconic walks. It’s always steeper than you remember, but the views at the top are worth the effort.
+                </div>
+                <div class="text-color mt-2 mb-3">
+                    Afterwards, treat yourself to a purchase from the curated collection of shoes and fashion at<span class="red-text"> Sissa Sorella Collection</span>, or give your eyebrows some love at<span class="red-text"> Alchemy Beauty Lab</span>.
+                </div>
+                <div class="pb-4 mb-2">
+                    <img class="img-news-content" src="../images/@Model.UrlImage" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-5">
+            <div class="recommend-text">We recommend</div>
+            @foreach (var item in ViewBag.Top4new)
+            {
+                <div class="flash-news bdb">
+
+                    <a asp-action="NewsDetails" asp-route-id="@item.Id" class="row">
+                        <div class="col-6">
+                            <img class="img-flash-news" src="../images/@item.UrlImage" />
+                        </div>
+                        <div class="col-6">
+                            <p class="text-color authur-times" style="color:black">@item.Title</p>
+                        </div>
+                    </a>
+
+                </div>
+            }
+        </div>
+
+
+    </div>
+
+</div>
+<!-- body news end -->
+
+<style>
+    .bdb {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .red-text {
+        color: #e81043;
+        font-weight: 600;
+    }
+
+    .times-text {
+        paddingng #222;
+    }
+
+    .authur-text {
+        margin-right: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #d8dbdf;
+        color: red;
+        font-weight: 600;
+    }
+
+    .authur-times {
+        color: #5f7297;
+        font-size: 14px;
+        display: flex;
+        margin: 16px 0;
+    }
+
+    .bg-navbar-news {
+        height: 94px;
+        background-color: #495057;
+    }
+
+    .sesion-link {
+        margin-top: 48px;
+        padding-bottom: 12px;
+    }
+
+    .text-color,
+    .sesion-link-item {
+        color: #0b2047;
+        font-size: 15px;
+    }
+
+    .container-news {
+        display: flex;
+        background-color: #ccc;
+        margin-top: 20vh;
+    }
+
+    .recommend-text {
+        font-size: 22px;
+        line-height: 28px;
+        font-weight: 600;
+        text-transform: none;
+        color: #0A0B0D;
+    }
+
+    .container-text {
+        padding-bottom: 20px;
+    }
+
+    .name-news {
+        padding-top: 12px;
+    }
+
+    .container-title-text {
+        margin-bottom: 70px;
+    }
+
+    .img-first-content {
+        height: 100%;
+    }
+
+    .img-news-content {
+        height: 400px;
+        width: 100%;
+    }
+
+    .img-flash-news {
+        height: 100%;
+    }
+
+    .flash-news {
+        padding: 16px 0;
+    }
+
+    .banner-inner-wrap {
+        height: 128vh;
+    }
+
+    .container-body-news {
+        padding-top: 20px;
+    }
+
+    .line-right {
+        border-right: 1px solid #000;
+    }
+
+    .line-bottom {
+        border-bottom: 1px solid #000;
+    }
+
+    .news-details-title {
+        font-size: 32px;
+        line-height: 40px;
+        font-weight: 600;
+        text-transform: none;
+        color: #0B2047;
+    }
+
+    .table-see-do {
+        padding: 20px 20px 4px 20px;
+        border: 1px solid #dee2e6;
+    }
+
+    .img-table-item {
+        height: 48px;
+        width: 48px;
+    }
+
+    .table-see-do-title {
+        padding-bottom: 14px;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .table-see-do-text {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 18px;
+        margin-left: 8px;
+    }
+
+    .table-see-do-item {
+        padding: 16px 0;
+    }
+
+</style>
+

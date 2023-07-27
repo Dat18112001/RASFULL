@@ -1,0 +1,63 @@
+﻿@model HakunaMatata.Models.DataModels.Newspicture;
+
+@{Layout = null;}
+
+<div class="row">
+    <div class="col-sm-12 b-r">
+        <form asp-action="CreateOrEditImage" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="PictureName">PictureName</label>
+                <input type="text" asp-for="PictureName" class="form-control" />
+                <span asp-validation-for="PictureName" class="text-danger"></span>
+                <label asp-for="NewsID">NewsID</label>
+                <input type="text" asp-for="NewsID" class="form-control" />
+                <span asp-validation-for="NewsID" class="text-danger"></span>
+                <label asp-for="URL">URL</label>
+                <input type="file" id="imageInput" class="form-control" />
+                <span asp-validation-for="URL" class="text-danger"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Save"
+                       class="btn btn-sm btn-primary float-right m-t-n-xs">
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#imageInput').change(function () {
+            var file = this.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // Update the value of PictureName with the selected file's name
+            $('#PictureName').val(file.name);
+
+            $.ajax({
+                url: '/AdminArea/News',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // The response will contain the URL of the saved image
+                    var imageUrl = response.url;
+
+                    // Update the input field value with the image URL
+                    $('#URL').val(imageUrl);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    });
+
+
+</script>
+

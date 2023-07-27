@@ -1,0 +1,102 @@
+﻿@{
+    Layout = null;
+    var email = ViewData["Email"] as string;
+    var otp = ViewBag.OTP as string;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Xác thực OTP</title>
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/admin/css/animate.css" rel="stylesheet">
+    <link href="~/admin/css/loginstyle.css" rel="stylesheet">
+    <link href="~/admin/css/style.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="login">
+        <div class="container">
+            <h1>Xác thực mã OTP</h1>
+            <p class="text-warning">@ViewBag.Message</p>
+
+            <div class="login-form">
+                <div class="form-group" style="font-size:1.5rem">
+                        <label for="email">Địa chỉ email:</label>
+                        <input type="text" id="email" class="form-control" value="@email" readonly>
+                    </div>
+                <div class="form-group" style="font-size:1.5rem">
+                        <label for="otp">Mã OTP:</label>
+                        <input type="text" id="otp" name="otp" class="form-control" required>
+                        <div id="errorText" class="text-danger" style="display: none;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label id="countdownLabel">Thời gian còn lại: 2:00</label>
+                    </div>
+                    <div class="form-group">
+                        <button style="font-size:2rem" type="submit" class="btn btn-primary" onclick="verifyOTP()">Xác nhận</button>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Mainly scripts -->
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
+    <script src="~/admin/js/popper.min.js"></script>
+    <script src="~/admin/js/bootstrap.js"></script>
+    <script src="~/admin/js/services/hakunamata.js"></script>
+    <script>
+        function verifyOTP() {
+            var inputOTP = document.getElementById("otp").value;
+            var serverOTP = "@otp";
+
+            if (inputOTP === serverOTP) {
+                alert("Mã OTP hợp lệ");
+                window.location.href = "/dang-ki?email=" + encodeURIComponent(document.getElementById("email").value);
+            } else {
+                // Hiển thị cảnh báo
+                var errorText = document.getElementById("errorText");
+                errorText.textContent = "Mã OTP không hợp lệ. Vui lòng kiểm tra lại.";
+                errorText.style.display = "block";
+            }
+        }
+
+
+        // Đếm ngược 2 phút
+        var countdown = 120;
+        var countdownLabel = document.getElementById("countdownLabel");
+
+        function updateCountdown() {
+            var minutes = Math.floor(countdown / 60);
+            var seconds = countdown % 60;
+            countdownLabel.textContent = "Thời gian còn lại: " + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+
+            if (countdown > 0) {
+                countdown--;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        updateCountdown();
+    </script>
+</body>
+</html>
+
+<div class="parent clearfix">
+    <div class="bg-illustration">
+        <img src="~/assets/img/RAS-3.png" alt="logo">
+
+        <div class="burger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+}
+@model HakunaMatata.Models.ViewModels.VM_Login
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Đăng nhập</title>
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/admin/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link href="~/admin/css/animate.css" rel="stylesheet">
+    <link href="~/admin/css/loginstyle.css" rel="stylesheet">
+    <link href="~/admin/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    <div class="login">
+        <div class="container">
+            <h1 style="margin-top: 100px">Login to access to<br />your account</h1>
+            <p class="text-warning">@ViewBag.Message</p>
+
+            <div class="login-form">
+                <form asp-action="Login" method="post" asp-route-returnurl="@Model.ReturnUrl">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" asp-for="LoginName" placeholder="Tài khoản" required="">
+                        <span asp-validation-for="LoginName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" asp-for="Password" placeholder="Mật khẩu" required="">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div style="display:block" class="remember-form checkbox checkbox-info d-flex align-items-center">
+                        <input id="is-remember-me" asp-for="IsRememberMe" style="margin:0px" class="styled"
+                               type="checkbox">
+                        <label for="is-remember-me">
+                            Ghi nhớ đăng nhập
+                        </label>
+                    </div>
+                    @*<a href="#"><small>Quên mật khẩu?</small></a>*@
+                    <a asp-area="AdminArea" asp-controller="Account" asp-action="Register" class="text-muted text-center"><small>Bạn chưa có tài khoản?</small></a>
+                    <a href="/quen-mat-khau" class="text-muted text-center"><small>Quên mật khẩu?</small></a>
+                    
+                    <button style="align-content:center; margin-left:100px" type="submit">LOG-IN</button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
+    <script src="~/admin/js/popper.min.js"></script>
+    <script src="~/admin/js/bootstrap.js"></script>
+    <script src="~/admin/js/services/hakunamata.js"></script>
+</body>
+
+</html>
+<div class="parent clearfix">
+    <div class="bg-illustration">
+        <img src="~/assets/img/RAS-3.png" alt="logo">
+
+        <div class="burger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+
+
+</div>

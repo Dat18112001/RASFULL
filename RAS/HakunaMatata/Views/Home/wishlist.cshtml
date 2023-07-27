@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@model List<HakunaMatata.Models.ViewModels.VM_WishList>
+
+@section scripts{
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=LoadMarker">
+    </script>
+    <script type="text/javascript" src="~/assets/js/maplace-active.js"></script>
+}
+    <!-- user wish -->
+    <div style="margin-top: 20vh;">
+        <div class="container">
+            <div class="user-wishlist">
+                <img class="img-user" src="/assets/img/author/1.png" />
+                <h3>USER'S WISHLIST</h3>
+            </div>
+            <div class="user-search">
+                <input type="text" class="search-input" placeholder="Nhap de tim kiem san pham">
+                <div class="search-btn">
+                    <div class="search-btn-icon fa fa-search"></div>
+                </div>
+            </div>
+        </div>
+    <div class="container">
+        @foreach (var item in Model)
+        {
+            <div class="wish-item row">
+                <div class="col-4">
+                    @{
+                        int randomNumber = new Random().Next(1, 8);
+                        string imagePath = $"../assets/img/banner/{item.Id}.jpg";
+                    }
+                    <img class="img-item-wish" src="@imagePath" />
+                </div>
+                <div class="col-8">
+                    <h3 style="color:black" class="title-wish-item">@item.Title</h3>
+                    <div class="row">
+                        <p class="col-2 wish-address">Address : </p>
+                        <p class="col-10 wish-address-data">@item.Address</p>
+                    </div>
+                    <div class="row">
+                        <p class="col-2 wish-cost">Cost : </p>
+                        <p class="col-10 wish-cost-data">@item.Price</p>
+                    </div>
+                    <form action="/Home/wishlist/@item.Id" method="post">
+                        <div class="col-xl-4 col-lg-6 col-md-6 btn-container">
+                            <input style="color: red; border: 2px solid" class="btn btn-buy" type="submit" value="REMOVE" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    </div>
+    <!-- user wish end -->
+
+    <style>
+        .container-text {
+            padding-bottom: 20px;
+        }
+
+        .name-news {
+            padding-top: 12px;
+        }
+
+        .container-title-text {
+            margin-bottom: 70px;
+        }
+
+        .img-item-wish {
+            height: 100%;
+        }
+
+        .user-wishlist,
+        .user-search {
+            display:flex;
+        }
+
+        .user-search{
+            margin: 40px 0;
+        }
+
+        .img-user{
+            width: 48px;
+            height: 48px;
+            margin-right:16px;
+        }
+
+        .search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            padding: 0 16px;
+            border-radius: 2px;
+            background-color: #ebeef3;
+        }
+
+        .search-btn {
+            background-color: #000;
+            border: none;
+            border-radius: 2px;
+            margin-right: 3px;
+            height: 34px;
+            width: 60px;
+            display: flex;
+            justify-content: center;
+            align-items:center;
+        }
+
+        .search-btn-icon {
+            font-size: 14px;
+            color:#fff;
+        }
+        
+        .wish-item{
+            background-color: #ebeef3;
+            padding: 16px 0;
+            margin-bottom: 16px;
+        }
+
+        .wish-address,
+        .wish-cost{
+            font-weight: bold;
+            color:#000;
+        }
+
+        .wish-address-data,
+        .wish-cost-data,
+        .remove-item-wish {
+            color: #000;
+        }
+
+        .remove-item-wish{
+            background-color: #fff;
+            border-radius: 12px;
+            width: 100px ;
+            padding: 0 12px;
+        }
+    </style>
+

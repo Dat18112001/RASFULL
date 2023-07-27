@@ -1,0 +1,283 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@model List<HakunaMatata.Models.ViewModels.VM_News>
+
+@section scripts{
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=LoadMarker">
+    </script>
+    <script type="text/javascript" src="~/assets/js/maplace-active.js"></script>
+}
+<!-- main news start -->
+<div>
+    <div class="container-news">
+        <div class="bg-navbar-news">
+        </div>
+        <div class="bg-sesion-link">
+            <div class="sesion-link container">
+                <a href="/" class="sesion-link-item">
+                    <span>Home</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                <a href="/" class="sesion-link-item">
+                    <span>News</span>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                <a href="/" class="sesion-link-item">
+                    <span>ACT</span>
+                </a>
+            </div>
+        </div>
+        <div class="container-first-content" style="background-image: url(../assets/img/banner/pexels-photo-6489734.jpeg)">
+            <div class="container">
+                <div class="container-title-box">
+                    <h3 class="container-title-text">ACT Real Estate and Property Market News</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- main news end -->
+<!-- body news start -->
+<div class="container">
+    <div class="container-body-news row">
+        <div class="col-lg-7 line-right news-list mb-5">
+            <div class="news-item">
+                <a href="/" class="row" style="height: 100%;">
+                    <div class="img-news-box col-6"></div>
+                    <div class="news-info-box col-6">
+                        <div style="color:black" class="news-title">@Model.FirstOrDefault()?.Title</div>
+                        <div class="authur-times">
+                            <div class="authur-text">Jessica Taulaga</div>
+                            <div class="times-text">June 17, 2023</div>
+                        </div>
+                        <p class="text-color news-content">The residence at 30 Crozier Circuit spans 997 square metres of land.</p>
+                    </div>
+                </a>
+            </div>
+            @foreach (var item in Model)
+            {
+                <div class="news-item-second">
+                    <a asp-action="NewsDetails" asp-route-id="@item.Id" class="row">
+
+                        <div class="img-news-box col-5" style="background-image: url(../images/@item.UrlImage);"></div>
+                        <div class="news-info-box-second col-7">
+                            <div class="news-title" style="color:black">@item.Title</div>
+                            <div class="authur-times">
+                                <div class="authur-text">Jessica Taulaga</div>
+                                <div class="times-text" style="color:black">June 17, 2023</div>
+                            </div>
+                            <div class="row">
+                                <div class="news-item-topic col-auto">Report</div>
+                                <div class="news-item-topic col-auto">Rental Price</div>
+                            </div>
+
+                        </div>
+
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-5">
+            <div class="recommend-text">We recommend</div>
+            @{
+                var random = new Random();
+                var randomItems = Model.OrderBy(x => random.Next()).Take(4);
+            }
+
+            @foreach (var item in randomItems)
+            {
+                <div class="flash-news bdb">
+
+                    <a asp-action="NewsDetails" asp-route-id="@item.Id" class="row">
+                        <div class="col-6">
+                            <img class="img-flash-news" src="../images/@item.UrlImage" />
+                        </div>
+                        <div class="col-6">
+                            <p class="text-color authur-times" style="color:black">@item.Title</p>
+                        </div>
+                    </a>
+
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+<!-- body news end -->
+
+<style>
+    .bdb {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .text-color {
+        color: black;
+    }
+
+    .container-news {
+    }
+
+    .recommend-text {
+        font-size: 22px;
+        line-height: 28px;
+        font-weight: 600;
+        text-transform: none;
+        color: #0A0B0D;
+    }
+
+    .sesion-link-item {
+        color: #0b2047;
+    }
+
+    .bg-navbar-news {
+        height: 94px;
+        background-color: #495057;
+    }
+
+    .container-text {
+        padding-bottom: 20px;
+    }
+
+    .name-news {
+        padding-top: 12px;
+    }
+
+    .container-title-text {
+        margin-bottom: 0;
+        font-size: 32px;
+        line-height: 40px;
+        font-weight: 600;
+        text-transform: none;
+        color: #fff;
+        text-shadow: 0 0 3px #888;
+    }
+
+    .container-first-content {
+        background-image: url('/assets/img/bg/4.png');
+        background-position: center; /*điều chỉnh góc độ hình ảnh*/
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100%;
+        height: 250px;
+        display: flex;
+        align-items: center;
+    }
+
+    .img-first-content {
+        height: 100%;
+    }
+
+    .img-flash-news {
+        height: 100%;
+    }
+
+    .flash-news {
+        padding: 16px 0;
+    }
+
+    .container-body-news {
+        margin-top: 48px;
+    }
+
+    .line-right {
+        border-right: 1px solid #F1F5FA;
+    }
+
+    .line-bottom,
+    .flash-news {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .sesion-link {
+        margin-top: 48px;
+        padding-bottom: 12px;
+    }
+
+    .container-title-box {
+        width: auto;
+        height: 52px;
+    }
+
+    .authur-times {
+        font-size: 14px;
+        display: flex;
+        margin: 16px 0;
+    }
+
+    .times-text {
+        color: #222;
+    }
+
+    .authur-text {
+        margin-right: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #d8dbdf;
+        color: #aab5c9;
+        font-weight: 600;
+    }
+
+    .news-title {
+        font-size: 18px;
+        line-height: 28px;
+        font-weight: 600;
+        text-transform: none;
+        color: #000;
+    }
+
+    .img-news-box {
+        background-image: url('../assets/img/banner/1.jpg');
+        background-position: center; /*điều chỉnh góc độ hình ảnh*/
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .news-info-box {
+        padding: 32px;
+        background-color: #e4eaf2;
+        height: 100%;
+    }
+
+    .news-info-box-second {
+        padding: 32px;
+        height: 100%;
+    }
+
+    .news-content {
+        line-height: 20px;
+        font-size: 14px;
+    }
+
+    .news-item {
+        height: 285px;
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    .news-item-second {
+        padding: 24px 0;
+        border-top: 1px solid #dee2e6;
+        overflow: hidden;
+    }
+
+    .keyword-text {
+        padding: 6px 10px;
+        background-color: #F1F5FA;
+        border-radius: 24px;
+    }
+
+    .news-item-topic {
+        padding: 4px 12px;
+        color: #0b2047;
+        background-color: #e9ecef;
+        margin-right: 8px;
+        border-radius: 100px;
+        font-size: 14px;
+        line-height: 18px;
+    }
+</style>
+

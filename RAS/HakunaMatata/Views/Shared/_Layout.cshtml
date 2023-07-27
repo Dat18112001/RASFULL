@@ -1,0 +1,218 @@
+﻿@using HakunaMatata.Helpers;
+@{
+    int userId = 0;
+    string userName = string.Empty;
+    string userAvatar = string.Empty;
+    string userCoin = string.Empty;
+    string userPackage = string.Empty;
+    string userRole = string.Empty;
+    int userRoleId = 3;
+}
+
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"]</title>
+
+    <!-- favicon -->
+    <link rel=icon href=~/assets/img/icon.png sizes="20x20" type="image/png">
+    <!-- Vendor Stylesheet -->
+    <link rel="stylesheet" href="~/assets/css/vendor.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/flaticon.css">
+    <link rel="stylesheet" href="~/assets/css/icomoon.css">
+    <link rel="stylesheet" href="~/assets/css/ionicons.min.css">
+    <!-- responsive Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+    <link rel="stylesheet" href="~/css/awesome-bootstrap-checkbox.css" />
+    <script src="~/admin/js/jquery-3.1.1.min.js"></script>
+</head>
+
+<body>
+
+@*    <!-- preloader area start -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-inner">
+            <div class="spinner">
+                <div class="dot1"></div>
+                <div class="dot2"></div>
+            </div>
+        </div>
+    </div>*@
+    <!-- preloader area end -->
+    <div class="body-overlay" id="body-overlay"></div>
+
+    <!-- navbar start -->
+    <div class="navbar-area">
+        @{
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "UserId").Value);
+                userName = User.Claims.FirstOrDefault(c => c.Type == "UserName").Value;
+                userAvatar = User.Claims.FirstOrDefault(c => c.Type == "UserAvatar")?.Value;
+                userCoin = User.Claims.FirstOrDefault(c => c.Type == "UserCoin")?.Value;
+                userPackage = User.Claims.FirstOrDefault(c => c.Type == "UserPackage")?.Value;
+
+                userRoleId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "LevelId").Value);
+            }
+            else
+            {
+                userCoin = User.Claims.FirstOrDefault(c => c.Type == "UserCoin")?.Value;
+                userPackage = User.Claims.FirstOrDefault(c => c.Type == "UserPackage")?.Value;
+            }
+        }
+        <nav class="navbar navbar-area navbar-expand-lg">
+            <div class="container nav-container">
+                <div class="responsive-mobile-menu">
+                    <h1 style="display: none"> da dang nhap voi cai ten @userName</h1>
+                    <span style="display: none" id="userIdSpan">@userId</span>
+                    <button class="menu toggle-btn d-block d-lg-none" data-toggle="collapse"
+                            data-target="#realdeal_main_menu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-left"></span>
+                        <span class="icon-right"></span>
+                    </button>
+                </div>
+                <div class="logo">
+                    <a asp-controller="Home" asp-action="Index" >
+                        <div class="logo-img-main"></div>
+                    </a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="realdeal_main_menu">
+                    <ul class="navbar-nav menu-open">
+                        <li>
+                            <a class="menu-open-item" asp-controller="RealEstate" asp-area="AdminArea" asp-action="ClientRealEstateList" target="_blank">Trang quản lý</a>
+                        </li>
+                        <li>
+                            <a class="menu-open-item" asp-controller="RealEstate" target="_blank">Danh sách bài đăng</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="menu-open-item"><a asp-area="AdminArea" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
+                        }
+                        else
+                        {
+                            <li class="menu-open-item"><a asp-controller="Account" asp-area="AdminArea" asp-action="Login" target="_blank">Đăng nhập</a></li>
+                            <li class="menu-open-item"><a asp-controller="Account" asp-area="AdminArea" asp-action="Register" target="_blank">Đăng kí</a></li>
+                        }
+                        <li>
+                            <a class="menu-open-item" href="#map">Bản đồ</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-right-part nav-right-part-desktop" style="margin-left: 12px; margin-right: 12px">
+                    <a style="color:#ffffff ; text-decoration: none" asp-controller="Home" asp-action="NewList" target="_blank">
+                        News<span class="right">
+                            <i class="la lab la-buffer"></i>
+                        </span>
+                    </a>
+                </div>
+                <div class="nav-right-part nav-right-part-desktop">
+                    <a style="color:white;padding-top:0px; background-color:#c21616" class="btn btn-brown" asp-controller="RealEstate" asp-area="AdminArea" asp-action="Create" target="_blank">
+                        ĐĂNG TIN<span class="right">
+                            <i class="la la-plus"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- navbar end -->
+
+    @RenderBody()
+
+    <!--login modal-->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="form">
+            <div class="modal-content">
+                <div class="modal-content">
+                    @await Html.PartialAsync("_LoginPartial", new VM_Login())
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--end login modal-->
+    <!-- footer area start -->
+    <footer style="background-color:#495057; color:white " class="footer-area">
+        <div height: 10%  class="container">
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="widget widget_nav_menu">
+                            <h4 style="color:white; text-decoration:none" class="widget-title">Danh mục</h4>
+                            <ul>
+                                <li><a style=" color:white; text-decoration:none " asp-controller="RealEstate" asp-action="Index" asp-route-type="1">Phòng trọ, nhà trọ</a></li>
+                                <li><a style=" color:white; text-decoration:none " asp-controller="RealEstate" asp-action="Index" asp-route-type="2">Nhà nguyên căn</a></li>
+                                <li><a style=" color:white; text-decoration:none " asp-controller="RealEstate" asp-action="Index" asp-route-type="3">Căn hộ</a></li>
+                                <li><a style=" color:white; text-decoration:none " asp-controller="RealEstate" asp-action="Index" asp-route-type="4">Ở ghép</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="widget widget_nav_menu">
+                            <h4 style="color:white; text-decoration:none " class="widget-title">Về website</h4>
+                            <ul>
+                                <li><a style=" color:white; text-decoration:none " href="#">Quy định</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Chính sách</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Câu hỏi thường gặp</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Đăng kí thành viên</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="widget widget_nav_menu">
+                            <h4 style="color:white; text-decoration:none" class="widget-title">Danh mục</h4>
+                            <ul>
+                                <li><a style=" color:white; text-decoration:none " href="#">Trang chủ</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Đăng kí</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Đăng nhập</a></li>
+                                <li><a style=" color:white; text-decoration:none " href="#">Trang quản lý</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <form class="widget widget-subscribe">
+                            <div class="rld-single-input">
+                                <input type="text" placeholder="Họ tên">
+                            </div>
+                            <div class="rld-single-input">
+                                <input type="text" placeholder="Email@email.com">
+                            </div>
+                            <button style="background-color: white" class="btn btn-brown w-100">Đăng kí</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="copy-right text-center">
+                © RAS System <a href="#" target="_blank">
+                    <i class="fa fa-heart"></i><span></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <!-- footer area end -->
+    <!-- back to top area start -->
+    <div class="back-to-top">
+        <span class="back-top"><i class="fa fa-angle-up"></i></span>
+    </div>
+    <!-- back to top area end -->
+
+    
+    <!-- all plugins here -->
+    <script src="~/assets/js/vendor.js"></script>
+    <!-- main js  -->
+    <script src="~/assets/js/main.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

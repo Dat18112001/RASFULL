@@ -1,0 +1,99 @@
+﻿@model HakunaMatata.Models.DataModels.Agent;
+
+
+<style>
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .qr-code {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+    .note {
+        color: #888;
+        margin-top: 10px;
+    }
+
+    .payment-button {
+        background-color: #00a4fd;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .payment-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+</style>
+
+<body>
+<div class="container">
+    <span style="display: none" id="userBalance">So du hien tai: @ViewBag.Coin</span>
+    <h2>Nạp coin</h2>
+
+    <form asp-action="Index" method="post">
+        <div class="form-group">
+            <label asp-for="Coin">Nhập số tiền: (1.000 đ = 1 Coin)</label>
+            <input type="text" asp-for="Coin" class="form-control"/>
+            <span asp-validation-for="Coin" class="text-danger"></span>
+        </div>
+        <div>
+            <label for="PaymentOption">Hình thức thanh toán</label>
+            <ul id="PaymentOption" class="payment-list">
+                <li>
+                    <input type="radio" value="VNPay" name="Payment" checked="checked"/> VnPay
+                    <a href="#">
+                        <img src="~/assets/img/mastercart.png" alt="">
+                    </a>
+                </li>
+                <li>
+                    <input type="radio" value="MoMo" name="Payment"/> MoMo
+                    <a href="#">
+                        <img style="width: 34px !important;" src="~/assets/img/momo.png" alt="">
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="form-group" style="display: none">
+            <label asp-for="Id">Id</label>
+            <input type="text" asp-for="Id" value="@ViewBag.UserID" class="form-control"/>
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>
+        <button type="button" class="payment-button" id="btn-submit-order">Thanh toán</button>
+    </form>
+</div>
+
+<script src="~/js/application/web/checkout.js" asp-append-version="true"></script>
+
+</body>

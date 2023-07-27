@@ -1,0 +1,9 @@
+﻿@model IEnumerable<HakunaMatata.Models.DataModels.News>;
+
+@{ ViewData["Title"] = "Index";}
+
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAllNews", Model)
+</div>
+
+

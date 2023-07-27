@@ -1,0 +1,409 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@model HakunaMatata.Models.ViewModels.Condition;
+
+@section scripts{
+    @*    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNI_ZWPqvdS6r6gPVO50I4TlYkfkZdXh8&callback=LoadMarker">
+    </script>*@
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdaulA09E6i19z88_muzOLSmVVi0Vp4EM&libraries=places&language=vi&callback=initialize"
+            referrerpolicy="no-referrer-when-downgrade">
+    </script>
+    <style type="text/css">
+        .product_agent_size {
+            width: 55px;
+        }
+
+        .clamp-2 {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script type="text/javascript" src="~/assets/js/maplace-active.js"></script>
+}
+
+<div class="hero-wrap banner-area jarallax" data-stellar-background-ratio="0.5" style="background-image: url(../assets/img/banner/bg_1.jpg);">
+    <div class="overlay"></div>
+    <!--<div class="overlay-2"></div>-->
+    <div class="hero-wrap container">
+        <div class="banner-inner-wrap">
+            <div class="main-search-area">
+                <div>
+                    <div class="container">
+                        <div style="color:#c21616 ; font-weight:bold" class=" text justify-content:center w-100 container-first-content col-xl-7">
+                            <h1 style="color:#fff;font-weight:bold;font-size:48px; justify-content:center">Find Properties</h1>
+                            <h1 style="color:#fff;font-weight:bold;font-size:48px;  padding-top:10px" class="container-text">That Make You Money</h1>
+                            <form action="/dang-ki" method="get">
+                                <div class="col-xl-12 col-lg-12 col-md-12 btn-container">
+                                    <input style=" border:none;background-color: #c21616; color: white" class="btn btn-primary" type="submit" value="SIGN UP NOW" />
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="banner-search-wrap">
+        <div class="tab-content">
+            <div class="tab-pane fade show active">
+                <form asp-action="Index" asp-controller="RealEstate" method="get">
+                    <div class="rld-main-search">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <div class="rld-single-input left-icon">
+                                    <input asp-for="SearchString" type="text" placeholder="Nhập khu vực cần tìm kiếm">
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-6 col-md-6 px-xl-0">
+                                <div class="rld-single-select">
+                                    <select asp-for="City" class="select single-select" asp-items="ViewBag.Cities">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-6 col-md-6 pr-xl-0">
+                                <div class="rld-single-select">
+                                    <select asp-for="Type" class="select single-select" asp-items="ViewBag.Types">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <input style="background-color:#c21616" class="btn btn-yellow" type="submit" value="TÌM KIẾM" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-12 heading-section text-center ftco-animate mb-5 mt-5">
+        <span style="color: #495057" class="subheading">What we offer</span>
+        <h2 class="mb-2">Exclusive Offer For You</h2>
+    </div>
+
+    @*<div class="property-filter-area row row-cols-4 custom-gutter" style="position: relative; height: 419.4px;">*@
+    <div class="mt-5"></div>
+    <div class="row">
+        @foreach (var item in ViewBag.Top4)
+        {
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 mb-4">
+                <div class="card border-0 shadow-sm">
+                    @if (@item.UrlImage == "404")
+                    {
+                        <img src="~/assets/img/banner1.jpg" alt="img" class="card-bg">
+                    }
+
+                    else
+                    {
+                        @*<img src="@item.ImageUrl" class="w-100 h-100" alt="img">*@
+                        <img src="./images/@item.UrlImage" class="card-bg" alt="Sample Image">
+                    }
+                    <div class="card-item row">
+
+                        <div class="card-info col-7">
+                            <div class="card-body">
+
+                                <h4 class="card-price"> @item.Price vnd</h4>
+                                <h6 class="card-item-title"><a href="/thong-tin-chi-tiet?id=@(item.Id)"> @item.Title</a></h6>
+                                <div class="text-secondary2">
+                                    <i class="fa fa-bed card-item-icon"></i> 3 <i class="fa fa-bath card-item-icon"></i> 2 <i class="fa fa-motorcycle card-item-icon"></i> 1
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="agent-box col-5">
+                            <a href="/thong-tin-chi-tiet?id=@(item.Id)" style="text-decoration: none; display: block;">
+                                <div class="d-flex agent-user">
+                                    <div class="product_agent_size">
+                                        <img src="/images/avatar/@item.AvatarAgent" alt="placeholder+image" class="w-100 rounded-circle">
+                                    </div>
+                                    <div class="align-self-center agent-name-box">
+                                        <h3 class="text-uppercase agent-name-item">Agent</h3>
+                                        <span class="agent-name-item">@item.AgentName</span>
+                                    </div>
+
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        }
+
+    </div>
+
+
+
+
+
+</div>
+
+
+<div class="container">
+    <h3 class="mb-2 exclusive-title">Exclusive News For You</h3>
+    <div class="property-filter-area row row-cols-4 custom-gutter">
+        @foreach (var item in ViewBag.Top4sub)
+        {
+            <div class="rld-filter-item col-lg-3 col-sm-6">
+                <div class="single-feature">
+                    <div class="thumb">
+                        @if (string.IsNullOrEmpty(item.UrlImage))
+                        {
+                            <img src="/images/90134e25-5c98-4888-a63a-d63a10c0c37f-skyhome1.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="img">
+                        }
+                        else
+                        {
+                            <img src="/images/@item.UrlImage" style="width: 100%; height: 100%; object-fit: cover;" alt="img">
+                        }
+                    </div>
+                    <div class="details">
+                        <p class="author text-primary">@item.Title</p>
+                        <h6 class="title"><a href="/Home/index2"><span class="clamp-2">@item.NewsBody</span></a></h6>
+                        <ul class="contact-list">
+                            <li><a class="btn btn-yellow" href="/news-chi-tiet/@(item.Id)">Chi tiết</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<section class="ftco-section ftco-fullwidth">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                <span class="subheading">Services</span>
+                <h2 class="mb-2">Why Choose Us?</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid px-0">
+        <div class="row d-md-flex text-wrapper align-items-stretch">
+            <div class="one-half mb-md-0 mb-4 img d-flex align-self-stretch about-us-img" style="background-image: url(../assets/img/banner/about.jpg)"></div>
+            <div class="one-half half-text d-flex justify-content-end align-items-center">
+                <div class="text-inner pl-md-5">
+                    <div class="row d-flex">
+                        <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                            <div class="media block-6 services-wrap d-flex">
+                                <i class="fa fa-handshake-o icon d-flex justify-content-center align-items-center" aria-hidden="true"></i>
+                                <div class="media-body pl-4">
+                                    <h3 style="color:black; font-weight: bold">No Downpayment</h3>
+                                    <p style="color: rgba(0, 0, 0, 0.5)">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                            <div class="media block-6 services-wrap d-flex">
+                                <i class="fa fa-credit-card-alt icon d-flex justify-content-center align-items-center" aria-hidden="true"></i>
+                                <div class="media-body pl-4">
+                                    <h3 style="color:black; font-weight: bold">All Cash Offer</h3>
+                                    <p style="color: rgba(0, 0, 0, 0.5)">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                            <div class="media block-6 services-wrap d-flex">
+                                <i class="fa fa-calendar-check-o icon d-flex justify-content-center align-items-center" aria-hidden="true"></i>
+                                <div class="media-body pl-4">
+                                    <h3 style="color:black; font-weight: bold">Experts in Your Corner</h3>
+                                    <p style="color: rgba(0, 0, 0, 0.5)">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 d-flex align-self-stretch ftco-animate">
+                            <div class="media block-6 services-wrap d-flex">
+                                <i class="fa fa-diamond icon d-flex justify-content-center align-items-center" aria-hidden="true"></i>
+                                <div class="media-body pl-4">
+                                    <h3 style="color:black; font-weight: bold">Locked in Pricing</h3>
+                                    <p style="color: rgba(0, 0, 0, 0.5)">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-title text-center">
+    <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+        <span class="subheading">Bản Đồ</span>
+        <h2 class="mb-2">Tìm kiếm trên bản đồ</h2>
+    </div>
+    <div class="input-group m-b">
+        <span class="input-group-addon">
+            <i class="fas fa-map-marker-alt"></i>
+        </span>
+        <input id="searchTextField" type="text" class="form-control" />
+        <input type="hidden" id="placeLat" />
+        <input type="hidden" id="placeLng" />
+    </div>
+
+    <div id="map" style="height: 500px;"></div>
+    <div id="infowindow-content">
+        <span id="place-name" class="title"></span><br>
+        <span id="place-address"></span>
+    </div>
+</div>
+@*
+    <div class="banner-area banner-search">
+        <div id="map" style="height: 88vh"></div>
+    </div>*@
+<div class="">
+    <div class="col-lg-12">
+        <div class="ibox-content">
+            <div class="input-group m-b">
+                <span class="input-group-addon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </span>
+                @*                    <input asp-for="Address" id="searchTextField" type="text" class="form-control" />
+                <input asp-for="Latitude" type="hidden" id="placeLat" />
+                <input asp-for="Longtitude" type="hidden" id="placeLng" />*@
+            </div>
+
+            <div id="map" style="height:0px"></div>
+            <div id="infowindow-content">
+                <span id="place-name" class="title"></span><br>
+                <span id="place-address"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .container-first {
+        display: flex;
+        padding-top: 170px;
+        padding-bottom: 40px;
+        color: black;
+    }
+
+    .container-text {
+        padding: 24px 0;
+    }
+
+    .btn-container {
+        padding-left: 0;
+    }
+
+        .btn-container .btn {
+            border: 1px solid #000;
+            background-color: #0000;
+        }
+
+    .img-first-content {
+        height: 300px;
+        width: 100%;
+    }
+
+    .property {
+        padding-top: 20px;
+    }
+
+    .news {
+        padding-top: 30px;
+        padding-bottom: 16px;
+    }
+
+    li {
+        color: black;
+    }
+
+</style>
+<script>
+    // Initialize and add the map
+    function initialize() {
+        var loca = { lat: 16.0738064, lng: 108.1477255 };
+        // The map, centered at Uluru
+        var map = new google.maps.Map(
+            document.getElementById('map'), { zoom: 16, center: loca });
+        // The marker, positioned at Uluru
+        //var marker = new google.maps.Marker({ position: loca, map: map });
+
+        var input = document.getElementById('searchTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        autocomplete.bindTo('bounds', map);
+
+        // Set the data fields to return when the user selects a place.
+        autocomplete.setFields(
+            ['address_components', 'geometry', 'icon', 'name']);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+            map: map,
+            anchorPoint: new google.maps.Point(0, -29)
+        });
+
+        autocomplete.addListener('place_changed', function () {
+            infowindow.close();
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                window.alert("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+                document.getElementById('placeLat').value = place.geometry.location.lat();
+                document.getElementById('placeLng').value = place.geometry.location.lng();
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+
+            //infowindowContent.children['place-icon'].src = place.icon;
+            infowindowContent.children['place-name'].textContent = place.name;
+            infowindowContent.children['place-address'].textContent = address;
+            infowindow.open(map, marker);
+        });
+
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
+
